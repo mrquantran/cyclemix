@@ -214,13 +214,14 @@ class MLP(nn.Module):
 
 class ResNet(torch.nn.Module):
     """ResNet with the softmax chopped off and the batchnorm frozen"""
+
     def __init__(self, input_shape, hparams):
         super(ResNet, self).__init__()
-        if hparams['resnet18']:
-            self.network = torchvision.models.resnet18(pretrained=True)
+        if hparams["resnet18"]:
+            self.network = torchvision.models.resnet18(pretrained=False)
             self.n_outputs = 512
         else:
-            self.network = torchvision.models.resnet50(pretrained=True)
+            self.network = torchvision.models.resnet50(pretrained=False)
             self.n_outputs = 2048
 
         # self.network = remove_batch_norm_from_resnet(self.network)
@@ -231,8 +232,8 @@ class ResNet(torch.nn.Module):
             tmp = self.network.conv1.weight.data.clone()
 
             self.network.conv1 = nn.Conv2d(
-                nc, 64, kernel_size=(7, 7),
-                stride=(2, 2), padding=(3, 3), bias=False)
+                nc, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+            )
 
             for i in range(nc):
                 self.network.conv1.weight.data[:, i, :, :] = tmp[:, i % 3, :, :]
@@ -243,7 +244,7 @@ class ResNet(torch.nn.Module):
 
         self.freeze_bn()
         self.hparams = hparams
-        self.dropout = nn.Dropout(hparams['resnet_dropout'])
+        self.dropout = nn.Dropout(hparams["resnet_dropout"])
 
     def forward(self, x):
         """Encode x into a feature vector of size n_outputs."""

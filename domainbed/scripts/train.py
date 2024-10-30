@@ -228,9 +228,9 @@ if __name__ == "__main__":
             step_vals = algorithm.update(minibatches_device, uda_device)
         else:
             if (step / steps_per_epoch) < 15:
-                step_vals = algorithm.update(minibatches_device, uda_device, warmup=True)
+                step_vals = algorithm.update(minibatches_device, uda_device)
             else:
-                step_vals = algorithm.update(minibatches_device, uda_device, warmup=False)
+                step_vals = algorithm.update(minibatches_device, uda_device)
         checkpoint_vals['step_time'].append(time.time() - step_start_time)
 
         for key, val in step_vals.items():
